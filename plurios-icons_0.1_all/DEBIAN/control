@@ -1,0 +1,8 @@
+Package: plurios-icons
+Version: 0.1
+Priority: optional
+Architecture: all
+Size: 2716
+Section: misc
+Maintainer: PluriOS Team
+Description: paquete de iconos de plurios.
