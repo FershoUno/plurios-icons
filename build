@@ -1,0 +1,29 @@
+#!/bin/bash
+# Author: @FershoUno <https://github.com/FershoUno>
+
+if [ "$(id -u)" -ne 0 ]; then
+  echo "This script must be run as root."
+  exit 1
+fi
+
+NAME="plurios-icons"
+VERSION="0.1"
+ARCH="amd64"
+DIR_PACKAGE="${NAME}_${VERSION}_${ARCH}"
+
+rm -rf *.deb *.tar.gz ${NAME}*${ARCH}* "${NAME}" 2>/dev/null
+
+mkdir $DIR_PACKAGE/
+cp -r DEBIAN/ $DIR_PACKAGE/
+cp -r usr/ $DIR_PACKAGE/
+
+SIZE=$(du -ks --exclude=DEBIAN "$DIR_PACKAGE/" | awk '{print $1}')
+
+sed -i "s/CHANGE_NAME/$NAME/g" "$DIR_PACKAGE/DEBIAN/control"
+sed -i "s/CHANGE_VERSION/$VERSION/g" "$DIR_PACKAGE/DEBIAN/control"
+sed -i "s/CHANGE_SIZE/$SIZE/g" "$DIR_PACKAGE/DEBIAN/control"
+sed -i "s/CHANGE_ARCH/$ARCH/g" "$DIR_PACKAGE/DEBIAN/control"
+
+chown -R root:root "$DIR_PACKAGE"
+
+dpkg-deb --build "$DIR_PACKAGE"
